@@ -1,7 +1,7 @@
-import reactLogo from "./assets/react.svg";
+import Router from "./router/Router";
 
 function App() {
-  return <div></div>;
+  return <Router />;
 }
 
 export default App;
