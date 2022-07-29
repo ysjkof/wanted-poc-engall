@@ -4,21 +4,11 @@ import styled from 'styled-components';
 import { PrimaryButton } from '../components/Button';
 import PageLayout from '../components/PageLayout';
 import ScheduleBox from '../components/ScheduleBox';
-import { DAYS_KOR, TIME_GAP } from '../constants/constants';
+import { Days, DAYS_KOR, TIME_GAP } from '../constants/constants';
 import useScheduls from '../hooks/useSchedules';
 import { Schedule } from '../models/schedulesModel';
 
 export type Time = Date;
-
-export enum Days {
-  SUNDAY,
-  MONDAY,
-  TUESDAY,
-  WEDNESDAY,
-  THURSDAY,
-  FRIDAY,
-  SATURDAY,
-}
 
 interface SchedulesByDay {
   [Days.SUNDAY]: Schedule[];
@@ -35,7 +25,6 @@ export default function Main() {
   const { data, deleteScheduleById } = useScheduls();
 
   useEffect(() => {
-    console.log('data 감지', data);
     if (data) {
       const distributeEachDay = () => {
         const arrangedObj: SchedulesByDay = {
@@ -61,7 +50,7 @@ export default function Main() {
   }, [data]);
 
   const invokeDelete = (id: number) => {
-    deleteScheduleById(id);
+    if (confirm('Can you delete schedule?')) deleteScheduleById(id);
   };
 
   return (
@@ -85,7 +74,6 @@ export default function Main() {
                     return (
                       <ScheduleBox
                         key={time.id}
-                        id={time.id}
                         start={time.startTime}
                         end={end}
                         onClick={() => invokeDelete(time.id)}
@@ -105,6 +93,9 @@ const Schedules = styled.div`
   display: flex;
   height: 100%;
   overflow-y: scroll;
+  background-color: white;
+  padding: 1rem;
+  min-height: 30vh;
 `;
 const Column = styled.div`
   height: 100%;
