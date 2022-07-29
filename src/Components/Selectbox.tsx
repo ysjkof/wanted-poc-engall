@@ -58,6 +58,7 @@ export default function Selectbox({ time, setTime }: SelectProps) {
                   onClick={() => selectHour(hours)}
                 >
                   {trans2Digit(hours)}
+                  {idx === 0 && <Arrow />}
                 </Button>
               ))}
             </Select>
@@ -82,6 +83,7 @@ export default function Selectbox({ time, setTime }: SelectProps) {
                   onClick={() => selectMinute(minute)}
                 >
                   {trans2Digit(minute)}
+                  {idx === 0 && <Arrow />}
                 </Button>
               ))}
             </Select>
@@ -89,12 +91,12 @@ export default function Selectbox({ time, setTime }: SelectProps) {
         </Column>
       </SelectorContainer>
       <Column>
-        <Button type="button" isActivation={checkAm(time.getHours())}>
+        <ButtonDark type="button" isActivation={checkAm(time.getHours())}>
           AM
-        </Button>
-        <Button type="button" isActivation={!checkAm(time.getHours())}>
+        </ButtonDark>
+        <ButtonDark type="button" isActivation={!checkAm(time.getHours())}>
           PM
-        </Button>
+        </ButtonDark>
       </Column>
     </Container>
   );
@@ -128,6 +130,10 @@ const Select = styled.div`
   max-height: 7.4rem;
   border: 1px solid gray;
   overflow: scroll;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   button {
     border: none;
     border-bottom: 1px solid lightgray;
@@ -135,7 +141,22 @@ const Select = styled.div`
 `;
 
 const Button = styled(SecondaryBtn)`
+  position: relative;
+  z-index: 1;
   color: ${(props) => (props.isActivation ? 'white' : 'black')};
-  background-color: ${(props) => (props.isActivation ? 'gray' : 'white')};
+  background-color: ${(props) => (props.isActivation ? 'lightgray' : 'white')};
   width: 4rem;
+`;
+const ButtonDark = styled(Button)`
+  background-color: ${(props) => (props.isActivation ? 'gray' : 'white')};
+  cursor: default;
+`;
+
+const Arrow = styled.div`
+  position: absolute;
+  right: 0.2rem;
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-top: 0.5rem solid gray;
+  top: 45%;
 `;
