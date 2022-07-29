@@ -1,9 +1,9 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PrimaryBtn, SecondaryButton } from '../Components/Button';
-import PageLayout from '../Components/PageLayout';
-import Selectbox from '../Components/Selectbox';
+import { PrimaryBtn, SecondaryButton } from '../components/Button';
+import PageLayout from '../components/PageLayout';
+import Selectbox from '../components/Selectbox';
 import { DAYS_KOR } from '../constants/constants';
 import useScheduls from '../hooks/useSchedules';
 import { DayTypes } from '../models/schedulesModel';

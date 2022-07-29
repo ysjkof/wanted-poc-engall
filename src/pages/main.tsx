@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { PrimaryButton } from '../Components/Button';
-import PageLayout from '../Components/PageLayout';
-import ScheduleBox from '../Components/ScheduleBox';
+import { PrimaryButton } from '../components/Button';
+import PageLayout from '../components/PageLayout';
+import ScheduleBox from '../components/ScheduleBox';
 import { DAYS_KOR, TIME_GAP } from '../constants/constants';
 import useScheduls from '../hooks/useSchedules';
 import { Schedule } from '../models/schedulesModel';

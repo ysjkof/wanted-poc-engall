@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import AppLayout from '../Components/AppLayout';
+import AppLayout from '../components/AppLayout';
 import AddSchedule from '../pages/AddSchedule';
 import Main from '../pages/main';
 
