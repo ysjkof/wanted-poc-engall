@@ -4,10 +4,9 @@ import styled from 'styled-components';
 import { PrimaryBtn, SecondaryButton } from '../components/Button';
 import PageLayout from '../components/PageLayout';
 import Selectbox from '../components/Selectbox';
-import { DAYS_KOR } from '../constants/constants';
+import { Days, DAYS_KOR } from '../constants/constants';
 import useScheduls from '../hooks/useSchedules';
 import { DayTypes } from '../models/schedulesModel';
-import { Days } from './main';
 
 export default function AddSchedule() {
   const navigate = useNavigate();
@@ -57,50 +56,58 @@ export default function AddSchedule() {
     <PageLayout
       title={'Add class schedule'}
       contents={
-        <Form onSubmit={invokeSaveSchedule}>
-          <Row>
-            <Column>Start time</Column>
-            <Column>
-              <Selectbox time={time} setTime={setTime} />
-            </Column>
-          </Row>
-          <Row>
-            <Column>
-              <span>Repeat on</span>
-            </Column>
-            <Column>
-              {selectedDays &&
-                Object.entries(selectedDays).map(([day, isSelect], idx) => (
-                  <SecondaryButton
-                    key={idx}
-                    type="button"
-                    text={DAYS_KOR[+day]}
-                    isActivation={isSelect}
-                    onClick={() => toggleDay(+day)}
-                  />
-                ))}
-            </Column>
-          </Row>
-          <SaveButton type="submit" onClick={invokeSaveSchedule}>
-            Save
-          </SaveButton>
-        </Form>
+        <>
+          <Form onSubmit={invokeSaveSchedule}>
+            <Row>
+              <Column>Start time</Column>
+              <Column>
+                <Selectbox time={time} setTime={setTime} />
+              </Column>
+            </Row>
+            <Row>
+              <Column>
+                <span>Repeat on</span>
+              </Column>
+              <Column>
+                {selectedDays &&
+                  Object.entries(selectedDays).map(([day, isSelect], idx) => (
+                    <SecondaryButton
+                      key={idx}
+                      type="button"
+                      text={DAYS_KOR[+day]}
+                      isActivation={isSelect}
+                      onClick={() => toggleDay(+day)}
+                    />
+                  ))}
+              </Column>
+            </Row>
+          </Form>
+          <LastRow>
+            <SaveButton type="submit" onClick={invokeSaveSchedule}>
+              Save
+            </SaveButton>
+          </LastRow>
+        </>
       }
     />
   );
 }
 
 const Form = styled.form`
-  position: relative;
   padding: 1rem;
   background-color: white;
   height: 100%;
+  width: 100%;
 `;
 
 const Row = styled.div`
   display: flex;
   gap: 2rem;
   margin-bottom: 6rem;
+`;
+const LastRow = styled(Row)`
+  justify-content: right;
+  padding: 1rem;
 `;
 const Column = styled.div`
   display: flex;
@@ -111,10 +118,7 @@ const Column = styled.div`
     white-space: nowrap;
   }
   align-items: center;
+  justify-content: space-between;
 `;
 
-const SaveButton = styled(PrimaryBtn)`
-  position: absolute;
-  right: 0;
-  bottom: -4.5rem;
-`;
+const SaveButton = styled(PrimaryBtn)``;
