@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { PrimaryBtn, SecondaryButton } from '../components/Button';
 import PageLayout from '../components/PageLayout';
 import Selectbox from '../components/Selectbox';
-import { Days, DAYS_KOR } from '../constants/constants';
+import { Days, DAYS_KOR, SCHEDULE_TIME } from '../constants/constants';
 import useScheduls from '../hooks/useSchedules';
 import { DayTypes } from '../models/schedulesModel';
 
@@ -43,9 +43,14 @@ export default function AddSchedule() {
     const changeArrOfDateObj = filteredSelectedDay
       .map((day) => day[0])
       .map((day) => {
-        const result = new Date(time);
-        result.setDate(result.getDate() + (+day - result.getDay()));
-        return result;
+        const startDate = new Date(time);
+        startDate.setDate(startDate.getDate() + (+day - startDate.getDay()));
+        const endDate = new Date(startDate);
+        endDate.setMinutes(endDate.getMinutes() + SCHEDULE_TIME);
+        return {
+          startDate: startDate,
+          endDate: endDate,
+        };
       });
 
     await saveSchedules(changeArrOfDateObj);

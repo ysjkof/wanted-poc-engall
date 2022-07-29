@@ -1,5 +1,5 @@
-import { ButtonHTMLAttributes } from "react";
-import styled from "styled-components";
+import { ButtonHTMLAttributes } from 'react';
+import styled from 'styled-components';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -23,9 +23,9 @@ export const SecondaryBtn = styled.button<{ isActivation?: boolean }>`
   padding: 0.6rem 1rem;
   font-size: 1rem;
   background-color: white;
-  border: 1px solid ${(props) => (props.isActivation ? "gray" : "lightgray")};
+  border: 1px solid ${(props) => (props.isActivation ? 'gray' : 'lightgray')};
   cursor: pointer;
-  color: ${(props) => (props.isActivation ? "gray" : "lightgray")};
+  color: ${(props) => (props.isActivation ? 'gray' : 'lightgray')};
 `;
 
 export const PrimaryBtn = styled(SecondaryBtn)`

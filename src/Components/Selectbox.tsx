@@ -26,6 +26,7 @@ export default function Selectbox({ time, setTime }: SelectProps) {
     });
     setHasHourSelector(false);
   };
+
   const selectMinute = (minute: number) => {
     setTime((prevTime) => {
       prevTime.setMinutes(minute);

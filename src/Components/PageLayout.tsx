@@ -26,6 +26,7 @@ export default function PageLayout({
 const Contents = styled.div`
   padding: 0 2rem;
   height: 100%;
+  width: 100%;
 `;
 const Header = styled.div`
   display: flex;
@@ -34,8 +35,10 @@ const Header = styled.div`
   padding: 2rem 0rem;
 `;
 const Body = styled.div`
-  padding: 1rem;
-  background-color: white;
+  position: relative;
   min-height: 40%;
+  width: 100%;
+  overflow: hidden;
+  min-height: 22.5rem;
   max-height: calc(100% - 16rem);
 `;

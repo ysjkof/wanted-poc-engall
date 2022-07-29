@@ -1,14 +1,16 @@
 import axiosInstance from '../api/axiosInstance';
 import HttpRequest from '../api/httpRequest';
-import { Days } from '../pages/main';
+import { Days } from '../constants/constants';
 
 export type DayTypes = Days;
 
 export interface Schedule {
   id: number;
-  startTime: Date;
+  startDate: Date;
+  endDate: Date;
 }
-export interface ScheduleInput extends Pick<Schedule, 'startTime'> {}
+export interface ScheduleInput
+  extends Pick<Schedule, 'startDate' | 'endDate'> {}
 
 class SchedulesModel {
   constructor(private readonly request: HttpRequest<Schedule>) {
@@ -18,8 +20,9 @@ class SchedulesModel {
   async getAll() {
     const data = await this.request.get();
     return data.map((data) => ({
-      ...data,
-      startTime: new Date(data.startTime),
+      id: data.id,
+      startDate: new Date(data.startDate),
+      endDate: new Date(data.endDate),
     }));
   }
 

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import schedulesModel, { Schedule } from '../models/schedulesModel';
+import schedulesModel, {
+  Schedule,
+  ScheduleInput,
+} from '../models/schedulesModel';
 
 export default function useScheduls() {
   const [data, setData] = useState<Schedule[]>([]);
@@ -9,9 +12,9 @@ export default function useScheduls() {
     setData(schedulesData);
   };
 
-  const saveSchedules = async (data: Date[]) => {
+  const saveSchedules = async (data: ScheduleInput[]) => {
     const result = await Promise.all(
-      data.map(async (data) => await schedulesModel.save({ startTime: data }))
+      data.map(async (dates) => await schedulesModel.save(dates))
     );
     setData((prevData) => [...prevData, ...result]);
     return result;

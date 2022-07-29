@@ -10,7 +10,7 @@ export const DAYS = [
 
 export const SCHEDULES = 'schedules';
 
-export const TIME_GAP = 40;
+export const SCHEDULE_TIME = 40;
 
 export const DAYS_KOR = [
   'Sunday',
@@ -21,3 +21,13 @@ export const DAYS_KOR = [
   'Friday',
   'Saturday',
 ];
+
+export enum Days {
+  SUNDAY,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+}

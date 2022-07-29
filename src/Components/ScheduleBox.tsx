@@ -4,23 +4,21 @@ import { Time } from '../pages/main';
 import { getTime } from '../utils/utils';
 
 interface ScheduleBoxProps {
-  id: number;
-  start: Time;
-  end: Time;
+  startDate: Time;
+  endDate: Time;
   onClick: () => void;
 }
 
 export default function ScheduleBox({
-  id,
-  start,
-  end,
+  startDate,
+  endDate,
   onClick,
 }: ScheduleBoxProps) {
   return (
     <Container onClick={onClick}>
       <Column>
-        <span>{getTime(start)} -</span>
-        <span>{getTime(end)}</span>
+        <span>{getTime(startDate)} -</span>
+        <span>{getTime(endDate)}</span>
       </Column>
       <Column>
         <XIcon />
@@ -51,6 +49,5 @@ const Column = styled.div`
     height: 1rem;
     border-radius: 100%;
     background-color: gray;
-    /* padding: ; */
   }
 `;

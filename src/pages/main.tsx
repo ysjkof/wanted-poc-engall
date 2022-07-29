@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { PrimaryButton } from '../components/Button';
 import PageLayout from '../components/PageLayout';
 import ScheduleBox from '../components/ScheduleBox';
-import { Days, DAYS_KOR, TIME_GAP } from '../constants/constants';
+import { Days, DAYS_KOR } from '../constants/constants';
 import useScheduls from '../hooks/useSchedules';
 import { Schedule } from '../models/schedulesModel';
 
@@ -38,7 +38,7 @@ export default function Main() {
         };
 
         data.forEach((event) => {
-          const key = event.startTime.getDay();
+          const key = event.startDate.getDay();
           // @ts-ignore
           arrangedObj[key] = [...arrangedObj[key], event];
         });
@@ -68,18 +68,14 @@ export default function Main() {
               <Column key={idx}>
                 <DayOfWeek>{DAYS_KOR[+day]}</DayOfWeek>
                 <ScheduleContainer>
-                  {times.map((time: Schedule) => {
-                    const end = new Date(time.startTime);
-                    end.setMinutes(end.getMinutes() + TIME_GAP);
-                    return (
-                      <ScheduleBox
-                        key={time.id}
-                        start={time.startTime}
-                        end={end}
-                        onClick={() => invokeDelete(time.id)}
-                      />
-                    );
-                  })}
+                  {times.map((time: Schedule) => (
+                    <ScheduleBox
+                      key={time.id}
+                      startDate={time.startDate}
+                      endDate={time.endDate}
+                      onClick={() => invokeDelete(time.id)}
+                    />
+                  ))}
                 </ScheduleContainer>
               </Column>
             ))}
