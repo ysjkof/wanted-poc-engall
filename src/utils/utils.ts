@@ -1,15 +1,15 @@
-import { Time } from "../pages/main";
+import { Time } from '../pages/main';
 
 // @ts-ignore
-export const splitTime = (time: Time): [string, string] => time.split(":");
-
 export const getTime = (time: Time) => {
-  const [hours, minutes] = time.split(":");
-  const suffix = +hours < 12 ? "AM" : "PM";
-  return `${hours}:${minutes} ${suffix}`;
+  const hours = time.getHours();
+  const minutes = time.getMinutes();
+
+  const suffix = +hours < 12 ? 'AM' : 'PM';
+  return `${trans2Digit(hours)}:${trans2Digit(minutes)} ${suffix}`;
 };
 
-export const trans2Digit = (number: number) => (number + "").padStart(2, "0");
+export const trans2Digit = (number: number) => (number + '').padStart(2, '0');
 
 export const makeHours = () => {
   const hours: number[] = [];

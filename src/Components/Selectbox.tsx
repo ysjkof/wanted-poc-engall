@@ -1,14 +1,14 @@
-import { useState } from "react";
-import styled from "styled-components";
-import { makeHours, makeMinutes, trans2Digit } from "../utils/utils";
-import { SecondaryBtn } from "./Button";
+import { useState } from 'react';
+import styled from 'styled-components';
+import { makeHours, makeMinutes, trans2Digit } from '../utils/utils';
+import { SecondaryBtn } from './Button';
 
 interface SelectProps {
-  startTime: [string, string];
-  setStartTime: React.Dispatch<React.SetStateAction<[string, string]>>;
+  time: Date;
+  setTime: React.Dispatch<React.SetStateAction<Date>>;
 }
 
-export default function Selectbox({ startTime, setStartTime }: SelectProps) {
+export default function Selectbox({ time, setTime }: SelectProps) {
   const [hasHourSelector, setHasHourSelector] = useState(false);
   const [hasMinuteSelector, setHasMinuteSelector] = useState(false);
 
@@ -19,12 +19,18 @@ export default function Selectbox({ startTime, setStartTime }: SelectProps) {
     setHasMinuteSelector((prevState) => !prevState);
   };
 
-  const selectHour = (hours: string) => {
-    setStartTime((prevTime) => [hours, prevTime[1]]);
+  const selectHour = (hours: number) => {
+    setTime((prevTime) => {
+      prevTime.setHours(hours);
+      return prevTime;
+    });
     setHasHourSelector(false);
   };
-  const selectMinute = (minute: string) => {
-    setStartTime((prevTime) => [prevTime[0], minute]);
+  const selectMinute = (minute: number) => {
+    setTime((prevTime) => {
+      prevTime.setMinutes(minute);
+      return prevTime;
+    });
     setHasMinuteSelector(false);
   };
 
@@ -39,16 +45,16 @@ export default function Selectbox({ startTime, setStartTime }: SelectProps) {
             isActivation={hasHourSelector}
             onClick={openHourSelector}
           >
-            {startTime[0]}
+            {trans2Digit(time.getHours())}
           </Button>
           {hasHourSelector && (
             <Select>
               {makeHours().map((hours, idx) => (
                 <Button
                   key={idx}
-                  isActivation={hours === +startTime[0]}
+                  isActivation={hours === time.getHours()}
                   type="button"
-                  onClick={() => selectHour(trans2Digit(hours))}
+                  onClick={() => selectHour(hours)}
                 >
                   {trans2Digit(hours)}
                 </Button>
@@ -63,16 +69,16 @@ export default function Selectbox({ startTime, setStartTime }: SelectProps) {
             isActivation={hasMinuteSelector}
             onClick={openMinuteSelector}
           >
-            {startTime[1]}
+            {trans2Digit(time.getMinutes())}
           </Button>
           {hasMinuteSelector && (
             <Select>
               {makeMinutes().map((minute, idx) => (
                 <Button
                   key={idx}
-                  isActivation={minute === +startTime[1]}
+                  isActivation={minute === +time.getMinutes()}
                   type="button"
-                  onClick={() => selectMinute(trans2Digit(minute))}
+                  onClick={() => selectMinute(minute)}
                 >
                   {trans2Digit(minute)}
                 </Button>
@@ -82,10 +88,10 @@ export default function Selectbox({ startTime, setStartTime }: SelectProps) {
         </Column>
       </SelectorContainer>
       <Column>
-        <Button type="button" isActivation={checkAm(+startTime[0])}>
+        <Button type="button" isActivation={checkAm(time.getHours())}>
           AM
         </Button>
-        <Button type="button" isActivation={!checkAm(+startTime[0])}>
+        <Button type="button" isActivation={!checkAm(time.getHours())}>
           PM
         </Button>
       </Column>
@@ -128,7 +134,7 @@ const Select = styled.div`
 `;
 
 const Button = styled(SecondaryBtn)`
-  color: ${(props) => (props.isActivation ? "white" : "black")};
-  background-color: ${(props) => (props.isActivation ? "gray" : "white")};
+  color: ${(props) => (props.isActivation ? 'white' : 'black')};
+  background-color: ${(props) => (props.isActivation ? 'gray' : 'white')};
   width: 4rem;
 `;

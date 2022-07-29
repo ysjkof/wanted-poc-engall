@@ -1,13 +1,13 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Layout from "../Components/Layout";
-import AddSchedule from "../pages/AddSchedule";
-import Main from "../pages/main";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AppLayout from '../Components/AppLayout';
+import AddSchedule from '../pages/AddSchedule';
+import Main from '../pages/main';
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<AppLayout />}>
           <Route index element={<Main />} />
           <Route path="/add" element={<AddSchedule />}></Route>
         </Route>

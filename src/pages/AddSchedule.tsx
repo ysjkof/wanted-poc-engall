@@ -1,114 +1,120 @@
-import { FormEvent, useState } from "react";
-import styled from "styled-components";
-import { PrimaryBtn, SecondaryButton } from "../Components/Button";
-import Selectbox from "../Components/Selectbox";
-import Title from "../Components/Title";
-import { DaysType } from "./main";
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { PrimaryBtn, SecondaryButton } from '../Components/Button';
+import PageLayout from '../Components/PageLayout';
+import Selectbox from '../Components/Selectbox';
+import { DAYS_KOR } from '../constants/constants';
+import useScheduls from '../hooks/useSchedules';
+import { DayTypes } from '../models/schedulesModel';
+import { Days } from './main';
 
 export default function AddSchedule() {
+  const navigate = useNavigate();
   const [selectedDays, setSelectedDays] = useState({
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false,
+    [Days.SUNDAY]: false,
+    [Days.MONDAY]: false,
+    [Days.TUESDAY]: false,
+    [Days.WEDNESDAY]: false,
+    [Days.THURSDAY]: false,
+    [Days.FRIDAY]: false,
+    [Days.SATURDAY]: false,
   });
-  const [startTime, setStartTime] = useState<[string, string]>(["09", "00"]);
 
-  const toggleDay = (day: DaysType) =>
+  const [time, setTime] = useState(() => {
+    const time = new Date();
+    time.setHours(9, 0, 0, 0);
+    return time;
+  });
+
+  const { saveSchedules } = useScheduls();
+
+  const toggleDay = (day: DayTypes) =>
     setSelectedDays((prevState) => ({ ...prevState, [day]: !prevState[day] }));
 
   const filterSelectedDay = () =>
     Object.entries(selectedDays).filter((day) => day[1] && day);
 
-  const invokeSaveSchedule = (event: FormEvent) => {
+  const invokeSaveSchedule = async (event: FormEvent) => {
     event.preventDefault();
 
     const filteredSelectedDay = filterSelectedDay();
 
     if (filteredSelectedDay.length === 0) return;
+    const changeArrOfDateObj = filteredSelectedDay
+      .map((day) => day[0])
+      .map((day) => {
+        const result = new Date(time);
+        result.setDate(result.getDate() + (+day - result.getDay()));
+        return result;
+      });
 
-    const data = {
-      startTime: startTime.join(""),
-      day: filteredSelectedDay.map((day) => day[0]),
-    };
-    console.log("data", data);
+    await saveSchedules(changeArrOfDateObj);
+    navigate('/');
   };
 
   return (
-    <Contents>
-      <Header>
-        <Title text="Add class schedule" />
-      </Header>
-      <Form onSubmit={invokeSaveSchedule}>
-        <Row>
-          <Column>Start time</Column>
-          <Column>
-            <Selectbox startTime={startTime} setStartTime={setStartTime} />
-          </Column>
-        </Row>
-        <Row>
-          <Column>
-            <span>Repeat on</span>
-          </Column>
-          <Column>
-            {selectedDays &&
-              Object.entries(selectedDays).map(([day, isSelect], idx) => (
-                <SecondaryButton
-                  key={idx}
-                  type="button"
-                  text={day}
-                  isActivation={isSelect}
-                  onClick={() => toggleDay(day as DaysType)}
-                />
-              ))}
-          </Column>
-        </Row>
-        <SaveButton type="submit">Save</SaveButton>
-      </Form>
-    </Contents>
+    <PageLayout
+      title={'Add class schedule'}
+      contents={
+        <Form onSubmit={invokeSaveSchedule}>
+          <Row>
+            <Column>Start time</Column>
+            <Column>
+              <Selectbox time={time} setTime={setTime} />
+            </Column>
+          </Row>
+          <Row>
+            <Column>
+              <span>Repeat on</span>
+            </Column>
+            <Column>
+              {selectedDays &&
+                Object.entries(selectedDays).map(([day, isSelect], idx) => (
+                  <SecondaryButton
+                    key={idx}
+                    type="button"
+                    text={DAYS_KOR[+day]}
+                    isActivation={isSelect}
+                    onClick={() => toggleDay(+day)}
+                  />
+                ))}
+            </Column>
+          </Row>
+          <SaveButton type="submit" onClick={invokeSaveSchedule}>
+            Save
+          </SaveButton>
+        </Form>
+      }
+    />
   );
 }
 
-const Contents = styled.div`
-  padding: 0 2rem;
-  height: 100%;
-`;
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 0rem;
-`;
 const Form = styled.form`
   position: relative;
   padding: 1rem;
   background-color: white;
-  max-height: 30vh;
   height: 100%;
 `;
 
+const Row = styled.div`
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 6rem;
+`;
 const Column = styled.div`
   display: flex;
   width: 100%;
   gap: 0.5rem;
   :first-child {
-    width: fit-content;
+    width: 6rem;
     white-space: nowrap;
   }
   align-items: center;
-`;
-const Row = styled.div`
-  display: flex;
-  height: 40%;
-  width: 100%;
-  gap: 2rem;
 `;
 
 const SaveButton = styled(PrimaryBtn)`
   position: absolute;
   right: 0;
-  bottom: -3.5rem;
+  bottom: -4.5rem;
 `;

@@ -1,16 +1,23 @@
-import styled from "styled-components";
-import XIcon from "../assets/XIcon";
-import { Time } from "../pages/main";
-import { getTime } from "../utils/utils";
+import styled from 'styled-components';
+import XIcon from '../assets/XIcon';
+import { Time } from '../pages/main';
+import { getTime } from '../utils/utils';
 
-interface ScheduleProps {
+interface ScheduleBoxProps {
+  id: number;
   start: Time;
   end: Time;
+  onClick: () => void;
 }
 
-export default function Schedule({ start, end }: ScheduleProps) {
+export default function ScheduleBox({
+  id,
+  start,
+  end,
+  onClick,
+}: ScheduleBoxProps) {
   return (
-    <Container>
+    <Container onClick={onClick}>
       <Column>
         <span>{getTime(start)} -</span>
         <span>{getTime(end)}</span>

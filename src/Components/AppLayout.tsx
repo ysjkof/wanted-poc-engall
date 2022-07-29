@@ -1,8 +1,8 @@
-import { Outlet } from "react-router-dom";
-import styled from "styled-components";
-import Header from "./Header";
+import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
+import Header from './Header';
 
-export default function Layout() {
+export default function AppLayout() {
   return (
     <Container>
       <Header />

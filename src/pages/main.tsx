@@ -1,116 +1,110 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { PrimaryButton } from "../Components/Button";
-import Schedule from "../Components/Schedule";
-import Title from "../Components/Title";
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { PrimaryButton } from '../Components/Button';
+import PageLayout from '../Components/PageLayout';
+import ScheduleBox from '../Components/ScheduleBox';
+import { DAYS_KOR, TIME_GAP } from '../constants/constants';
+import useScheduls from '../hooks/useSchedules';
+import { Schedule } from '../models/schedulesModel';
 
-export type DaysType =
-  | "monday"
-  | "tuesday"
-  | "wednesday"
-  | "thursday"
-  | "friday"
-  | "saturday"
-  | "sunday";
-export type Time = string;
-// "00:00" ~ "23:55"
+export type Time = Date;
 
-interface Schedules {
-  monday: Time[];
-  tuesday: Time[];
-  wednesday: Time[];
-  thursday: Time[];
-  friday: Time[];
-  saturday: Time[];
-  sunday: Time[];
+export enum Days {
+  SUNDAY,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
 }
 
-interface Event {
-  startTime: Time;
-  day: DaysType;
+interface SchedulesByDay {
+  [Days.SUNDAY]: Schedule[];
+  [Days.MONDAY]: Schedule[];
+  [Days.TUESDAY]: Schedule[];
+  [Days.WEDNESDAY]: Schedule[];
+  [Days.THURSDAY]: Schedule[];
+  [Days.FRIDAY]: Schedule[];
+  [Days.SATURDAY]: Schedule[];
 }
-
-const events: Event[] = [
-  { startTime: "09:30", day: "friday" },
-  { startTime: "09:00", day: "wednesday" },
-  { startTime: "11:50", day: "monday" },
-  { startTime: "14:15", day: "monday" },
-  { startTime: "10:00", day: "friday" },
-  { startTime: "09:30", day: "sunday" },
-];
 
 export default function Main() {
-  const [schedules, setSchedules] = useState<Schedules>();
+  const [schedules, setSchedules] = useState<SchedulesByDay>();
+  const { data, deleteScheduleById } = useScheduls();
 
   useEffect(() => {
-    const distributeEachDay = () => {
-      const arrangedObj: Schedules = {
-        monday: [],
-        tuesday: [],
-        wednesday: [],
-        thursday: [],
-        friday: [],
-        saturday: [],
-        sunday: [],
+    console.log('data 감지', data);
+    if (data) {
+      const distributeEachDay = () => {
+        const arrangedObj: SchedulesByDay = {
+          [Days.SUNDAY]: [],
+          [Days.MONDAY]: [],
+          [Days.TUESDAY]: [],
+          [Days.WEDNESDAY]: [],
+          [Days.THURSDAY]: [],
+          [Days.FRIDAY]: [],
+          [Days.SATURDAY]: [],
+        };
+
+        data.forEach((event) => {
+          const key = event.startTime.getDay();
+          // @ts-ignore
+          arrangedObj[key] = [...arrangedObj[key], event];
+        });
+        return arrangedObj;
       };
 
-      events.forEach((event) => {
-        arrangedObj[event.day] = [...arrangedObj[event.day], event.startTime];
-      });
-      return arrangedObj;
-    };
+      setSchedules(distributeEachDay());
+    }
+  }, [data]);
 
-    setSchedules(distributeEachDay());
-  }, []);
+  const invokeDelete = (id: number) => {
+    deleteScheduleById(id);
+  };
 
   return (
-    <Contents>
-      <Header>
-        <Title text="Class schedule" />
-        <Link to={"add"}>
+    <PageLayout
+      title={'Class schedule'}
+      titltLink={
+        <Link to={'add'}>
           <PrimaryButton text="Add Class Schedule" type="button" />
         </Link>
-      </Header>
-      <Body>
+      }
+      contents={
         <Schedules>
           {schedules &&
             Object.entries(schedules).map(([day, times], idx) => (
               <Column key={idx}>
-                <DayOfWeek>{day}</DayOfWeek>
+                <DayOfWeek>{DAYS_KOR[+day]}</DayOfWeek>
                 <ScheduleContainer>
-                  {times.map((time: string, idx: number) => (
-                    <Schedule key={idx} start={time} end={time} />
-                  ))}
+                  {times.map((time: Schedule) => {
+                    const end = new Date(time.startTime);
+                    end.setMinutes(end.getMinutes() + TIME_GAP);
+                    return (
+                      <ScheduleBox
+                        key={time.id}
+                        id={time.id}
+                        start={time.startTime}
+                        end={end}
+                        onClick={() => invokeDelete(time.id)}
+                      />
+                    );
+                  })}
                 </ScheduleContainer>
               </Column>
             ))}
         </Schedules>
-      </Body>
-    </Contents>
+      }
+    />
   );
 }
-
-const Contents = styled.div`
-  padding: 0 2rem;
-  height: 100%;
-`;
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 0rem;
-`;
-const Body = styled.div`
-  padding: 1rem;
-  background-color: white;
-  max-height: 30vh;
-  height: 100%;
-`;
 
 const Schedules = styled.div`
   display: flex;
   height: 100%;
+  overflow-y: scroll;
 `;
 const Column = styled.div`
   height: 100%;
@@ -123,7 +117,7 @@ const Column = styled.div`
 `;
 
 const DayOfWeek = styled.h2`
-  border-bottom: 1px solid red;
+  border-bottom: 1px solid gray;
   font-size: 1rem;
   color: #494949;
   width: 100%;
