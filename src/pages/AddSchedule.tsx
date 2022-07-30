@@ -40,20 +40,19 @@ export default function AddSchedule() {
     const filteredSelectedDay = filterSelectedDay();
 
     if (filteredSelectedDay.length === 0) return;
-    const changeArrOfDateObj = filteredSelectedDay
-      .map((day) => day[0])
-      .map((day) => {
-        const startDate = new Date(time);
-        startDate.setDate(startDate.getDate() + (+day - startDate.getDay()));
-        const endDate = new Date(startDate);
-        endDate.setMinutes(endDate.getMinutes() + SCHEDULE_TIME);
-        return {
-          startDate: startDate,
-          endDate: endDate,
-        };
-      });
+    const extractDay = filteredSelectedDay.map((day) => day[0]);
+    const changeArrayFromObj = extractDay.map((day) => {
+      const startDate = new Date(time);
+      startDate.setDate(startDate.getDate() + (+day - startDate.getDay()));
+      const endDate = new Date(startDate);
+      endDate.setMinutes(endDate.getMinutes() + SCHEDULE_TIME);
+      return {
+        startDate: startDate,
+        endDate: endDate,
+      };
+    });
 
-    await saveSchedules(changeArrOfDateObj);
+    await saveSchedules(changeArrayFromObj);
     navigate('/');
   };
 
