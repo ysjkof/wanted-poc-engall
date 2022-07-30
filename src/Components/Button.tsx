@@ -26,6 +26,7 @@ export const SecondaryBtn = styled.button<{ isActivation?: boolean }>`
   border: 1px solid ${(props) => (props.isActivation ? 'gray' : 'lightgray')};
   cursor: pointer;
   color: ${(props) => (props.isActivation ? 'gray' : 'lightgray')};
+  ${(props) => props.disabled && 'cursor:default; border:none;'}
 `;
 
 export const PrimaryBtn = styled(SecondaryBtn)`

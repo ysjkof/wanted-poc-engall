@@ -22,7 +22,7 @@ export default function Selectbox({ time, setTime }: SelectProps) {
   const selectHour = (hours: number) => {
     setTime((prevTime) => {
       prevTime.setHours(hours);
-      return prevTime;
+      return new Date(prevTime);
     });
     setHasHourSelector(false);
   };
@@ -30,7 +30,7 @@ export default function Selectbox({ time, setTime }: SelectProps) {
   const selectMinute = (minute: number) => {
     setTime((prevTime) => {
       prevTime.setMinutes(minute);
-      return prevTime;
+      return new Date(prevTime);
     });
     setHasMinuteSelector(false);
   };

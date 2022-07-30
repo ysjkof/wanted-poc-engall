@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PrimaryBtn, SecondaryButton } from '../components/Button';
@@ -6,7 +6,8 @@ import PageLayout from '../components/PageLayout';
 import Selectbox from '../components/Selectbox';
 import { Days, DAYS_KOR, SCHEDULE_TIME } from '../constants/constants';
 import useScheduls from '../hooks/useSchedules';
-import { DayTypes } from '../models/schedulesModel';
+import { DayTypes, Schedule } from '../models/schedulesModel';
+import { getTotalMinute } from '../utils/utils';
 
 export default function AddSchedule() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function AddSchedule() {
     [Days.FRIDAY]: false,
     [Days.SATURDAY]: false,
   });
+  const [disableDay, setDisableDay] = useState<number[]>([]);
 
   const [time, setTime] = useState(() => {
     const time = new Date();
@@ -26,7 +28,7 @@ export default function AddSchedule() {
     return time;
   });
 
-  const { saveSchedules } = useScheduls();
+  const { data, saveSchedules } = useScheduls();
 
   const toggleDay = (day: DayTypes) =>
     setSelectedDays((prevState) => ({ ...prevState, [day]: !prevState[day] }));
@@ -56,6 +58,18 @@ export default function AddSchedule() {
     navigate('/');
   };
 
+  const getSelectedDay = (date: Date, schedules: Schedule[]) => {
+    const changedTimeToMinute = getTotalMinute(date);
+    const sameTimeSchedule = schedules.filter(
+      (schedule) => getTotalMinute(schedule.startDate) === changedTimeToMinute
+    );
+    return sameTimeSchedule.map((schedule) => schedule.startDate.getDay());
+  };
+
+  useEffect(() => {
+    setDisableDay(getSelectedDay(time, data));
+  }, [time, data]);
+
   return (
     <PageLayout
       title={'Add class schedule'}
@@ -80,6 +94,7 @@ export default function AddSchedule() {
                       type="button"
                       text={DAYS_KOR[+day]}
                       isActivation={isSelect}
+                      disabled={disableDay.includes(+day)}
                       onClick={() => toggleDay(+day)}
                     />
                   ))}
