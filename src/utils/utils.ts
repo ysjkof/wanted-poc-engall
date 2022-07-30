@@ -25,3 +25,6 @@ export const makeMinutes = () => {
   }
   return hours;
 };
+
+export const getTotalMinute = (date: Date) =>
+  date.getHours() * 60 + date.getMinutes();

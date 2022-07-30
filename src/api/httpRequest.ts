@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { Schedule, ScheduleInput } from '../models/schedulesModel';
+import { ScheduleInput } from '../models/schedulesModel';
 
 class HttpRequest<T> {
   constructor(private readonly service: AxiosInstance) {
