@@ -44,6 +44,10 @@
   - [x] 1. 선택한 시간의 중복된 요일 비활성화
   - [x] 2. "Save" 버튼을 누르면 post하기 전에 확인하고 경고
 
+<img width="1396" alt="add" src="https://user-images.githubusercontent.com/77876601/181909413-aa5f351f-cfb2-4595-97ab-03f09d55a82d.png">
+
+<img width="1391" alt="add_alert" src="https://user-images.githubusercontent.com/77876601/181909418-6829eea8-6691-468c-9873-5a3b5ab656d0.png">
+
 ## 2. 데이터 형태 설계
 
 ```ts
