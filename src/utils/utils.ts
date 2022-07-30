@@ -28,3 +28,30 @@ export const makeMinutes = () => {
 
 export const getTotalMinute = (date: Date) =>
   date.getHours() * 60 + date.getMinutes();
+
+interface CheckTimeOverlap {
+  existStartTime: number;
+  existEndTime: number;
+  newStartTime: number;
+  newEndTime: number;
+}
+
+export const checkTimeOverlap = ({
+  existStartTime,
+  existEndTime,
+  newStartTime,
+  newEndTime,
+}: CheckTimeOverlap) => {
+  if (newStartTime > existStartTime && newStartTime < existEndTime) {
+    return true;
+  }
+
+  if (newEndTime > existStartTime && newEndTime < existEndTime) {
+    return true;
+  }
+
+  if (newStartTime === existStartTime && newEndTime === existEndTime) {
+    return true;
+  }
+  return false;
+};

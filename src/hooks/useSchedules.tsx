@@ -4,7 +4,7 @@ import schedulesModel, {
   Schedule,
   ScheduleInput,
 } from '../models/schedulesModel';
-import { getTime, getTotalMinute, trans2Digit } from '../utils/utils';
+import { checkTimeOverlap, getTime, getTotalMinute } from '../utils/utils';
 
 export default function useScheduls() {
   const [data, setData] = useState<Schedule[]>([]);
@@ -15,28 +15,34 @@ export default function useScheduls() {
   };
 
   const saveSchedules = async (inputData: ScheduleInput[]) => {
-    console.log('data', data);
-
-    const getMessages = (data: Schedule[]) =>
-      data.map(
+    const getMessages = (schedules: Schedule[]) =>
+      schedules.map(
         (value) =>
-          `${DAYS_KOR[value.startDate.getDay()]}(${getTime(value.startDate)})`
+          `${DAYS_KOR[value.startDate.getDay()]}(${getTime(
+            value.startDate
+          )} ~ ${getTime(value.endDate)})`
       );
 
-    const filterd = data.filter((value) => {
-      const existTime = getTotalMinute(value.startDate);
-      const existDay = value.startDate.getDay();
-      return inputData.find(
-        (input) =>
-          existTime === getTotalMinute(input.startDate) &&
-          existDay === input.startDate.getDay()
-      );
-    });
+    const filterTimeOverlap = (schedules: Schedule[]) => {
+      return schedules.filter((value) => {
+        return inputData.find(
+          (input) =>
+            checkTimeOverlap({
+              existStartTime: getTotalMinute(value.startDate),
+              existEndTime: getTotalMinute(value.endDate),
+              newStartTime: getTotalMinute(input.startDate),
+              newEndTime: getTotalMinute(input.endDate),
+            }) &&
+            value.startDate.getDay() === input.startDate.getDay() &&
+            input
+        );
+      });
+    };
 
-    console.log('filterd', filterd);
-    if (filterd.length >= 1) {
+    const filteredTimeOverlap = filterTimeOverlap(data);
+    if (filteredTimeOverlap.length >= 1) {
       alert(
-        `${getMessages(filterd)
+        `${getMessages(filteredTimeOverlap)
           .map((message) => message)
           .join(', ')}
         위 일정은 이미 있는 일정입니다. 제외하고 선택하세요
